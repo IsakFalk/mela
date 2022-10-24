@@ -1,0 +1,40 @@
+# Hydra stuff
+hydra:
+  output_subdir: null
+  run:
+    dir: "."
+
+defaults:
+  - _self_
+  - override hydra/job_logging: disabled
+
+# Extra logging information
+logger_name: "meta_eval"
+trial: "1"
+
+### Dataset
+dataset: "mixed"
+# N-way, K-shot setting (n_shots is changed inside of meta_eval.py dynamically)
+n_ways: 5
+n_queries: 15
+# If we use n * lam instead of lam
+normalize_lam: false
+
+### Model config
+## Specify model to use
+model: "resnet12"
+feat_dim: 640
+# Loading pretrained model
+pretrained_model: false
+
+## Evaluation
+test_db_size: 1500
+num_workers: 4
+
+## Testing
+test_C: 1.0
+use_bias: true
+is_norm: true
+
+### Auxiliary settings
+progress: true

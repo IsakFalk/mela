@@ -1,0 +1,66 @@
+# Hydra stuff
+hydra:
+  output_subdir: null
+  run:
+    dir: "."
+
+defaults:
+  - _self_
+  - override hydra/job_logging: disabled
+
+# Extra logging information
+logger_name: "fine_tune"
+trial: "2"
+
+### Dataset
+dataset: "mixed"
+## Setting
+# Generalized setting (or not)
+sample_shape: "few_shot"
+fixed_db: true
+no_replacement: true
+sim_imbalance: false
+# N-way, K-shot setting
+n_ways: 5
+n_shots: 5
+n_queries: 15
+
+### Model config
+## Specify model to use
+model: "resnet12"
+feat_dim: 640
+lam : 0.001
+# Loading pretrained model
+pretrained_model: false
+
+## Training
+train_db_size: 2800
+test_db_size: 1000
+num_workers: 4
+epochs: 2
+# If we use n * lam instead of lam
+normalize_lam: false
+# For validation accuracy
+val_n_ways: 5
+val_n_shots: 5
+
+# Data augmentation
+data_aug: true
+rotate_aug: true
+
+# Optimization
+learning_rate: 0.0001
+lr_decay_epochs: "10"
+lr_decay_rate: 0.1
+weight_decay: 1e-6
+
+# Use extra regularization to enforce local class centroids to be far apart
+extra_reg: true
+
+## Testing
+test_C: 1.0
+use_bias: true
+is_norm: true
+
+### Auxiliary settings
+progress: true

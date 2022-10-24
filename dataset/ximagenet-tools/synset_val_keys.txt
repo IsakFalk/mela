@@ -1,0 +1,97 @@
+n02930766 cab, hack, taxi, taxicab
+n03594945 jeep, landrover
+n02100735 English setter
+n02099267 flat-coated retriever
+n02804414 bassinet
+n04285008 sports car, sport car
+n03445924 golfcart, golf cart
+n02101556 clumber, clumber spaniel
+n04019541 puck, hockey puck
+n04067472 reel
+n02102177 Welsh springer spaniel
+n02974003 car wheel
+n04550184 wardrobe, closet, press
+n03444034 go-kart
+n04372370 switch, electric switch, electrical switch
+n03131574 crib, cot
+n03642806 laptop, laptop computer
+n04428191 thresher, thrasher, threshing machine
+n06359193 web site, website, internet site, site
+n02102040 English springer, English springer spaniel
+n03584829 iron, smoothing iron
+n02101006 Gordon setter
+n02099712 Labrador retriever
+n02102973 Irish water spaniel
+n02704792 amphibian, amphibious vehicle
+n03337140 file, file cabinet, filing cabinet
+n03496892 harvester, reaper
+n03100240 convertible
+n03874293 paddlewheel, paddle wheel
+n03761084 microwave, microwave oven
+n04371774 swing
+n03016953 chiffonier, commode
+n03180011 desktop computer
+n03425413 gas pump, gasoline pump, petrol pump, island dispenser
+n02814533 beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon
+n02966193 carousel, carrousel, merry-go-round, roundabout, whirligig
+n03992509 potter's wheel
+n03376595 folding chair
+n03345487 fire engine, fire truck
+n04238763 slide rule, slipstick
+n02100583 vizsla, Hungarian pointer
+n04542943 waffle iron
+n04467665 trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi
+n04447861 toilet seat
+n03742115 medicine chest, medicine cabinet
+n02101388 Brittany spaniel
+n02099849 Chesapeake Bay retriever
+n02977058 cash machine, cash dispenser, automated teller machine, automatic teller machine, automated teller, automatic teller, ATM
+n03785016 moped
+n03777568 Model T
+n02870880 bookcase
+n02701002 ambulance
+n02100236 German short-haired pointer
+n03201208 dining table, board
+n03770679 minivan
+n03977966 police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria
+n03290653 entertainment center
+n04429376 throne
+n03179701 desk
+n03832673 notebook, notebook computer
+n04252225 snowplow, snowplough
+n03125729 cradle
+n02666196 abacus
+n03485407 hand-held computer, hand-held microcomputer
+n03259280 Dutch oven
+n04442312 toaster
+n02791124 barber chair
+n04525305 vending machine
+n03388549 four-poster
+n04111531 rotisserie
+n03532672 hook, claw
+n04517823 vacuum, vacuum cleaner
+n03930630 pickup, pickup truck
+n04380533 table lamp
+n04099969 rocking chair, rocker
+n03998194 prayer rug, prayer mat
+n03796401 moving van
+n04344873 studio couch, day bed
+n04037443 racer, race car, racing car
+n03891251 park bench
+n02100877 Irish setter, red setter
+n04070727 refrigerator, icebox
+n03018349 china cabinet, china closet
+n02102318 cocker spaniel, English cocker spaniel, cocker
+n04040759 radiator
+n02102480 Sussex spaniel
+n03483316 hand blower, blow dryer, blow drier, hair dryer, hair drier
+n04243546 slot, one-armed bandit
+n02099601 golden retriever
+n02099429 curly-coated retriever
+n03670208 limousine, limo
+n04554684 washer, automatic washer, washing machine
+n03417042 garbage truck, dustcart
+n03207941 dishwasher, dish washer, dishwashing machine
+n03944341 pinwheel
+n03297495 espresso maker
+n04461696 tow truck, tow car, wrecker

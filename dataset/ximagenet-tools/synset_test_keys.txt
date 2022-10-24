@@ -1,0 +1,160 @@
+n02110185 Siberian husky
+n02172182 dung beetle
+n07754684 jackfruit, jak, jack
+n02107312 miniature pinscher
+n01491361 tiger shark, Galeocerdo cuvieri
+n02177972 weevil
+n01443537 goldfish, Carassius auratus
+n02104365 schipperke
+n02108551 Tibetan mastiff
+n07747607 orange
+n04579145 whiskey jug
+n01494475 hammerhead, hammerhead shark
+n02108422 bull mastiff
+n07932039 eggnog
+n02206856 bee
+n01440764 tench, Tinca tinca
+n07836838 chocolate sauce, chocolate syrup
+n02268443 dragonfly, darning needle, devil's darning needle, sewing needle, snake feeder, snake doctor, mosquito hawk, skeeter hawk
+n07716358 zucchini, courgette
+n02105412 kelpie
+n04326547 stone wall
+n07717556 butternut squash
+n07734744 mushroom
+n02105641 Old English sheepdog, bobtail
+n03160309 dam, dike, dyke
+n03930313 picket fence, paling
+n07920052 espresso
+n02823428 beer bottle
+n07579787 plate
+n07860988 dough
+n09421951 sandbar, sand bar
+n02108089 boxer
+n02808440 bathtub, bathing tub, bath, tub
+n02815834 beaker
+n02909870 bucket, pail
+n02106166 Border collie
+n02640242 sturgeon
+n04604644 worm fence, snake fence, snake-rail fence, Virginia fence
+n09428293 seashore, coast, seacoast, sea-coast
+n02168699 long-horned beetle, longicorn, longicorn beetle
+n04501370 turnstile
+n02105056 groenendael
+n04522168 vase
+n04398044 teapot
+n04562935 water tower
+n07745940 strawberry
+n07880968 burrito
+n07715103 cauliflower
+n09472597 volcano
+n09468604 valley, vale
+n07714571 head cabbage
+n04493381 tub, vat
+n02264363 lacewing, lacewing fly
+n09256479 coral reef
+n07590611 hot pot, hotpot
+n07760859 custard apple
+n02279972 monarch, monarch butterfly, milkweed butterfly, Danaus plexippus
+n02229544 cricket
+n03937543 pill bottle
+n02231487 walking stick, walkingstick, stick insect
+n09399592 promontory, headland, head, foreland
+n02105162 malinois
+n07873807 pizza, pizza pie
+n02110063 malamute, malemute, Alaskan malamute
+n02104029 kuvasz
+n07613480 trifle
+n07753113 fig
+n02105505 komondor
+n02219486 ant, emmet, pismire
+n01496331 electric ray, crampfish, numbfish, torpedo
+n07742313 Granny Smith
+n02233338 cockroach, roach
+n01498041 stingray
+n07892512 red wine
+n02109525 Saint Bernard, St Bernard
+n07615774 ice lolly, lolly, lollipop, popsicle
+n07720875 bell pepper
+n07930864 cup
+n07768694 pomegranate
+n02107908 Appenzeller
+n07802026 hay
+n02108000 EntleBucher
+n02281406 sulphur butterfly, sulfur butterfly
+n02236044 mantis, mantid
+n02107683 Bernese mountain dog
+n07753592 banana
+n04560804 water jug
+n02256656 cicada, cicala
+n02514041 barracouta, snoek
+n04553703 washbasin, handbasin, washbowl, lavabo, wash-hand basin
+n04591713 wine bottle
+n02106550 Rottweiler
+n02105251 briard
+n02655020 puffer, pufferfish, blowfish, globefish
+n02167151 ground beetle, carabid beetle
+n02106382 Bouvier des Flandres, Bouviers des Flandres
+n03000134 chainlink fence
+n02268853 damselfly
+n02226429 grasshopper, hopper
+n07831146 carbonara
+n02106662 German shepherd, German shepherd dog, German police dog, alsatian
+n07583066 guacamole
+n02169497 leaf beetle, chrysomelid
+n02939185 caldron, cauldron
+n02190166 fly
+n02788148 bannister, banister, balustrade, balusters, handrail
+n07716906 spaghetti squash
+n03063599 coffee mug
+n02641379 gar, garfish, garpike, billfish, Lepisosteus osseus
+n02795169 barrel, cask
+n02526121 eel
+n04049303 rain barrel
+n02536864 coho, cohoe, coho salmon, blue jack, silver salmon, Oncorhynchus kisutch
+n04557648 water bottle
+n07565083 menu
+n02165105 tiger beetle
+n02109047 Great Dane
+n02606052 rock beauty, Holocanthus tricolor
+n02607072 anemone fish
+n03786901 mortar
+n02109961 Eskimo dog, husky
+n02110627 affenpinscher, monkey pinscher, monkey dog
+n02894605 breakwater, groin, groyne, mole, bulwark, seawall, jetty
+n07718747 artichoke, globe artichoke
+n07714990 broccoli
+n02108915 French bulldog
+n03063689 coffeepot
+n09246464 cliff, drop, drop-off
+n03633091 ladle
+n04239074 sliding door
+n02259212 leafhopper
+n02106030 collie
+n02107142 Doberman, Doberman pinscher
+n03950228 pitcher, ewer
+n02276258 admiral
+n02280649 cabbage butterfly
+n09288635 geyser
+n07697313 cheeseburger
+n03459775 grille, radiator grille
+n02165456 ladybug, ladybeetle, lady beetle, ladybird, ladybird beetle
+n01484850 great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias
+n07753275 pineapple, ananas
+n07730033 cardoon
+n03983396 pop bottle, soda bottle
+n02643566 lionfish
+n07718472 cucumber, cuke
+n03314780 face powder
+n02105855 Shetland sheepdog, Shetland sheep dog, Shetland
+n02277742 ringlet, ringlet butterfly
+n02107574 Greater Swiss Mountain dog
+n09193705 alp
+n07584110 consomme
+n07875152 potpie
+n07717410 acorn squash
+n07614500 ice cream, icecream
+n09332890 lakeside, lakeshore
+n07697537 hotdog, hot dog, red hot
+n02174001 rhinoceros beetle
+n02281787 lycaenid, lycaenid butterfly
+n07749582 lemon

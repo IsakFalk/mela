@@ -1,0 +1,9 @@
+name: ximagenet
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - opencv
+  - numpy
+  - pillow
+  - tqdm
