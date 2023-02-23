@@ -194,13 +194,14 @@ Outputs the results to a log file.
 Train a supervised baseline that have access to the true labels.
 
 * Cite us
-#+begin_verse
-@article{mela2022,
+#+begin_center
+@article{wang2022robust,
   title={Robust Meta-Representation Learning via Global Label Inference and Classification},
-  author={Wang, Ruohan and John, Falk, and Pontil, Massimiliano and Ciliberto, Carlo},
-  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  author={Wang, Ruohan and Falk, Isak and Pontil, Massimiliano and Ciliberto, Carlo},
+  journal={arXiv preprint arXiv:2212.11702},
   year={2022}
 }
-#+end_verse
+#+end_center
+
 * License
 MIT
