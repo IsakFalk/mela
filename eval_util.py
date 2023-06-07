@@ -49,7 +49,11 @@ class FeatStore(Dataset):
         xs = []
         task_class_to_idx = []
         for cls in cls_sampled:
-            idx_sampled = np.random.choice(self.label_to_index[cls], self.n_per_class, False)
+            try:
+                idx_sampled = np.random.choice(self.label_to_index[cls], self.n_per_class, False)
+            except:
+                # Fungi has some classes with only a few samples
+                idx_sampled = np.random.choice(self.label_to_index[cls], self.n_per_class, True)
             task_class_to_idx.append(idx_sampled)
             xs.append(self.data[idx_sampled])
         xs = np.array(xs)

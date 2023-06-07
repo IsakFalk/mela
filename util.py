@@ -114,6 +114,8 @@ def map_dataset_to_config_form(dataset: str) -> str:
     """Map from datasets to forms made for the loading"""
     if dataset.lower() == "mixed":
         datasets = "aircraft/aircraft,cu_birds/cub,vgg_flower/vgg"
+    elif dataset.lower() == "metadataset":
+        datasets = "aircraft,cub,dtd,fungi,imagenet,omniglot,quickdraw,vgg,mscoco,traffic_sign"
     elif dataset.lower() == "h_aircraft":
         datasets = "aircraft/aircraft_variant,aircraft/aircraft_maker,aircraft/aircraft_family"
     elif dataset.lower() == "miniimagenet":

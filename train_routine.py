@@ -162,16 +162,16 @@ def full_train(
         info = util.print_metrics(["Loss"], train_loss)
         logger.info(info)
 
-        # setting feats_list to None means that test_fn will return a list
-        # with the correct features for each loader
-        # feats_list = None
         if eval_cond(epoch):
             for curr_val_n_shots, best_acc in best_val_acc.items():
-                test_acc = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)[0][0]
-                logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc}")
-                if test_acc > best_acc:
+                test_acc, test_per_dataset_acc, _  = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)
+                logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc[0]:.4f}")
+                logger.info(f"Per dataset:")
+                for name, acc in test_per_dataset_acc.items():
+                    logger.info(f"{name} {curr_val_n_shots}nshots val acc: {acc[0]:.4f}")
+                if test_acc[0] > best_acc:
                     logger.info(f"Best acc so far, saving model...")
-                    best_val_acc[curr_val_n_shots] = test_acc
+                    best_val_acc[curr_val_n_shots] = test_acc[0]
                     util.save_routine(
                         epoch, model, optimizer, f"{opt.model_path}/{opt.model_name}_xvalnshots{curr_val_n_shots}_best"
                     )

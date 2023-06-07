@@ -24,7 +24,7 @@ def get_train_dataset_and_loaders(opt):
         )
         n_cls = dataset.n_cls
         trainloader = get_dataloaders([dataset], opt.batch_size, opt.num_workers)[0]
-    elif opt.dataset.lower() == "mixed":
+    elif opt.dataset.lower() == "mixed" or opt.dataset.lower() == "metadataset":
         datasets, n_cls = get_datasets(opt, "train", opt.rotate_aug)
         dataset = MixDataset(
             datasets, opt, partition="train", rotate_aug=opt.rotate_aug
@@ -84,7 +84,7 @@ def sup_baseline_main(opt):
         optimizer,
         scheduler,
         logger,
-        lambda x: x >= opt.lr_decay_epochs[0],
+        lambda x: True,
     )
 
 

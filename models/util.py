@@ -20,7 +20,7 @@ def create_model(name, dataset="miniImageNet"):
     elif dataset.lower() == "timit":
         if name.lower() == "fc_res" or name.lower() == "resfc":
             model = model_dict["resfc"]()
-    elif "mixed" in dataset.lower() or "h_aircraft" in dataset.lower():
+    elif "mixed" in dataset.lower() or "h_aircraft" in dataset.lower() or "metadataset" in dataset.lower():
         if name.endswith("v2") or name.endswith("v3"):
             model = model_dict[name]()
         elif name.startswith("resnet50") or name.startswith("wrn") or name.startswith("convnet"):

@@ -10,12 +10,14 @@ from dataset.mix_dataset import default_transform as mix_default_transform
 
 def get_transform(opt, name, partition):
     """Get the correct transform of the dataset"""
-    if "imagenet" in name.lower():
-        data_module = imagenet
-    elif "aircraft" in name.lower() or "cub" in name.lower() or "flower" in name.lower():
-        data_module = mix_dataset
-    else:
-        raise NotImplementedError(name)
+    # if "imagenet" in name.lower():
+    #     data_module = imagenet
+    # elif "aircraft" in name.lower() or "cub" in name.lower() or "flower" in name.lower():
+    #     data_module = mix_dataset
+    # else:
+    #     raise NotImplementedError(name)
+
+    data_module = mix_dataset
 
     if opt.data_aug and partition.lower() == "train":
         transform = data_module.aug_transform
@@ -28,26 +30,36 @@ def get_transform(opt, name, partition):
 ximagenet_pattern = re.compile("^x([1-9][0-9]*)ImageNet$")
 
 
+# meta-dataset
+MD_META_SPLITS = {
+    "train": ["aircraft", "cub", "dtd", "fungi", "imagenet", "omniglot", "quickdraw", "vgg"],
+    "val": ["aircraft", "cub", "dtd", "fungi", "imagenet", "omniglot", "quickdraw", "vgg", "mscoco"],
+    "test": ["aircraft", "cub", "dtd", "fungi", "imagenet", "omniglot", "quickdraw", "vgg", "mscoco", "traffic_sign"]
+}
+
 def retrieve_dataset_from_name(opt, name, partition, rotate_aug):
     transform = get_transform(opt, name, partition)
-    if "aircraft" in name.lower() or "cub" in name.lower() or "flower" in name.lower():
-        # Create new dataset from mixture
-        dataset = SingleDataset(name, opt, partition=partition, rotate_aug=rotate_aug)
-        n_cls = dataset.n_cls
-    elif opt.dataset == "miniImageNet":
-        # n_cls = 64
-        dataset = ImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug)
-        n_cls = dataset.n_cls
-    elif opt.dataset == "tieredImageNet":
-        # n_cls = 351
-        dataset = TieredImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug)
-        n_cls = dataset.n_cls
-    elif ximagenet_pattern.match(opt.dataset):
-        # n_cls = 640
-        dataset = XImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug, name=opt.dataset)
-        n_cls = dataset.n_cls
-    else:
-        raise NotImplementedError(opt.dataset)
+    dataset = SingleDataset(name, opt, partition=partition, transform=transform, rotate_aug=rotate_aug)
+    n_cls = dataset.n_cls
+    #     n_cls = dataset.n_cls
+    # if "aircraft" in name.lower() or "cub" in name.lower() or "flower" in name.lower():
+    #     # Create new dataset from mixture
+    #     dataset = SingleDataset(name, opt, partition=partition, rotate_aug=rotate_aug)
+    #     n_cls = dataset.n_cls
+    # elif opt.dataset == "miniImageNet":
+    #     # n_cls = 64
+    #     dataset = ImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug)
+    #     n_cls = dataset.n_cls
+    # elif opt.dataset == "tieredImageNet":
+    #     # n_cls = 351
+    #     dataset = TieredImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug)
+    #     n_cls = dataset.n_cls
+    # elif ximagenet_pattern.match(opt.dataset):
+    #     # n_cls = 640
+    #     dataset = XImageNet(opt, partition=partition, transform=transform, rotate_aug=rotate_aug, name=opt.dataset)
+    #     n_cls = dataset.n_cls
+    # else:
+    #     raise NotImplementedError(opt.dataset)
     return dataset, n_cls
 
 
@@ -57,14 +69,18 @@ def get_datasets(opt, partition, rotate_aug):
     Get the dataset from opt.dataset, partition and rotate aug. If
     the `partition == train` and `opt.data_aug == True` then we
     use use the `aug_transform` from the module instead of the `default_transform`."""
-    datasets = []
+    _datasets = []
     n_cls_counter = []
-    for name in opt.datasets:
+    datasets = opt.datasets
+    # Filter out datasets that are not in the meta split
+    if opt.dataset == "metadataset":
+        datasets = [dataset for dataset in opt.datasets if dataset in MD_META_SPLITS[partition]]
+    for name in datasets:
         ds, n_cls = retrieve_dataset_from_name(opt, name, partition, rotate_aug)
-        datasets.append(ds)
+        _datasets.append(ds)
         n_cls_counter.append(n_cls)
     n_cls = sum(n_cls_counter)
-    return datasets, n_cls
+    return _datasets, n_cls
 
 
 def get_meta_dataset(opt, datasets, no_replacement=True, db_size=100, fixed_db=True, sample_shape="few_shot"):
