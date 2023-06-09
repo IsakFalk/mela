@@ -89,7 +89,6 @@ def sup_baseline_main(opt):
 
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=opt.lr_decay_epochs, gamma=opt.lr_decay_rate)
 
-    # TODO
     full_train_mdl(
         opt,
         model,
