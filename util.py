@@ -8,6 +8,17 @@ import numpy as np
 import torch
 from omegaconf import open_dict
 
+BATCH_SIZE_FACTOR = {
+    "ilsvrc_2012": 7,
+    "imagenet": 7,
+    "omniglot": 1,
+    "aircraft": 1,
+    "cu_birds": 1,
+    "dtd": 1,
+    "quickdraw": 1,
+    "fungi": 1,
+    "vgg_flower": 1
+}
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""

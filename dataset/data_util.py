@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 
 import dataset.imagenet as imagenet
 import dataset.mix_dataset as mix_dataset
@@ -81,6 +82,17 @@ def get_datasets(opt, partition, rotate_aug):
         n_cls_counter.append(n_cls)
     n_cls = sum(n_cls_counter)
     return _datasets, n_cls
+
+def get_datasets_mdl(opt, partition, rotate_aug):
+    ds_dict = OrderedDict()
+    datasets = opt.datasets
+    # Filter out datasets that are not in the meta split
+    if opt.dataset == "metadataset":
+        datasets = [dataset for dataset in opt.datasets if dataset in MD_META_SPLITS[partition]]
+    for name in datasets:
+        ds, n_cls = retrieve_dataset_from_name(opt, name, partition, rotate_aug)
+        ds_dict[name] = {"dataset": ds, "n_cls": n_cls}
+    return ds_dict
 
 
 def get_meta_dataset(opt, datasets, no_replacement=True, db_size=100, fixed_db=True, sample_shape="few_shot"):

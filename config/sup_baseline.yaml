@@ -33,6 +33,7 @@ pretrained_model: false
 batch_size: 64
 test_db_size: 1000
 num_workers: 4
+epoch_size: 5000
 epochs: 20
 # For validation accuracy
 val_n_ways: 20
