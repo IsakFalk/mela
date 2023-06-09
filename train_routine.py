@@ -97,7 +97,7 @@ class MDLClassifier(torch.nn.Module):
         feats = self.backbone(xs)
         logits = self.layer(feats)
         # Now get the correct logits and ys
-        logits = logits[:, self.dataloader_info_object["mask_fn"](name)]
+        logits = logits[:, self.aux_info_object["mask_fn"](name)]
         assert logits.shape[0] == ys.shape[0]
         # NOTE: This automatically scales imagenet to have larger weight since
         # we scale each dataset by a scale factor * batch_size, so the actual weighting is
@@ -164,7 +164,8 @@ def train_mdl(model, train_loaders, optimizer, logger, opt=None, progress=False)
         loss = 0.0
         for name, train_loader in train_loaders.items():
             loss += model.forward(name, train_loader)
-        loss /= len(train_loaders)
+        #loss /= len(train_loaders)
+        loss /= sum(util.BATCH_SIZ_FACTOR.values())
         loss.backward()
         optimizer.step()
         avg_metric.update([loss.item()])
@@ -211,6 +212,9 @@ def full_train(
         logger.info(info)
 
         if eval_cond(epoch):
+            util.save_routine(
+                epoch, model, optimizer, f"{opt.model_path}/{opt.model_name}_xvalnshots{curr_val_n_shots}_epoch{epoch}"
+            )
             for curr_val_n_shots, best_acc in best_val_acc.items():
                 test_acc, test_per_dataset_acc, _  = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)
                 logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc[0]:.4f}")
