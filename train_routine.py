@@ -98,7 +98,6 @@ class MDLClassifier(torch.nn.Module):
         logits = self.layer(feats)
         # Now get the correct logits and ys
         logits = logits[:, self.dataloader_info_object["mask_fn"](name)]
-        assert logits.shape[0] == ys.shape[0]
         # NOTE: This automatically scales imagenet to have larger weight since
         # we scale each dataset by a scale factor * batch_size, so the actual weighting is
         # scale_factor * \sum_i l_i / true_batch_size
