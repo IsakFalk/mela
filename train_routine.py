@@ -71,6 +71,40 @@ class SemanticMultiheadClassifier(torch.nn.Module):
         return loss / 3.0
 
 
+class MDLClassifier(torch.nn.Module):
+    """Used for training the backbone during meta-train using multi-domain classification
+
+    Wrapper to train the backbone during meta-train. At meta-test
+    time the backbone is extracted and we use a different strategy
+    given by the base_algorithm defined in this class."""
+
+    def __init__(self, backbone, feat_dim, dataloader_info_object, aux_info_object):
+        super().__init__()
+        self.backbone = backbone
+        self.dataloader_info_object = dataloader_info_object
+        self.aux_info_object = aux_info_object
+        self.summed_n_cls = 0
+        for name in self.dataloader_info_object.keys():
+            if name == "mask_fn":
+                continue
+            self.summed_n_cls += self.dataloader_info_object[name]["n_cls"]
+        self.layer = nn.Linear(feat_dim, self.summed_n_cls)
+
+    def forward(self, name, train_loader):
+        # First get input and output
+        batch_data = extract_batch_data_to_cuda(train_loader.sample())
+        xs, ys = batch_data[0], batch_data[1]
+        feats = self.backbone(xs)
+        logits = self.layer(feats)
+        # Now get the correct logits and ys
+        logits = logits[:, self.dataloader_info_object["mask_fn"](name)]
+        assert logits.shape[0] == ys.shape[0]
+        # NOTE: This automatically scales imagenet to have larger weight since
+        # we scale each dataset by a scale factor * batch_size, so the actual weighting is
+        # scale_factor * \sum_i l_i / true_batch_size
+        loss = F.cross_entropy(logits, ys, reduction="sum") / self.aux_info_object["opt"].batch_size
+        return loss
+
 def extract_batch_data_to_cuda(batch_data):
     # Depending on if we are in few-shot or flat / SL setting
     if len(batch_data) == 5:
@@ -123,6 +157,20 @@ def train(model, train_loader, optimizer, logger, opt=None, progress=False):
     return avg_metric.avg
 
 
+def train_mdl(model, train_loaders, optimizer, logger, opt=None, progress=False):
+    avg_metric = util.AverageMeter()
+    for i in tqdm(range(opt.epoch_size)):
+        optimizer.zero_grad()
+        loss = 0.0
+        for name, train_loader in train_loaders.items():
+            loss += model.forward(name, train_loader)
+        loss /= len(train_loaders)
+        loss.backward()
+        optimizer.step()
+        avg_metric.update([loss.item()])
+    return avg_metric.avg
+
+# The same, but may want to use the actual multi-way thing!
 def test_fn(model, test_loaders, val_n_shots, logger, opt=None):
     accs = []
 
@@ -185,15 +233,61 @@ def full_train(
     logger.info(f"Git-hash: {get_git_revision_hash()}")
 
 
+def full_train_mdl(
+    opt,
+    model,
+    train_loaders,
+    test_loaders,
+    optimizer,
+    lr_sch,
+    logger,
+    eval_cond,
+    test_fn=test_fn,
+):
+    best_val_acc = {key: 0 for key in opt.val_n_shots}
+    for epoch in range(opt.epochs):
+        train_loss = train_mdl(model, train_loaders, optimizer, logger, opt=opt, progress=opt.progress)
+        if lr_sch:
+            lr_sch.step()
+
+        logger.info(f"epoch {epoch}")
+        info = util.print_metrics(["Loss"], train_loss)
+        logger.info(info)
+
+        if eval_cond(epoch):
+            for curr_val_n_shots, best_acc in best_val_acc.items():
+                test_acc, test_per_dataset_acc, _  = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)
+                logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc[0]:.4f}")
+                logger.info(f"Per dataset:")
+                for name, acc in test_per_dataset_acc.items():
+                    logger.info(f"{name} {curr_val_n_shots}nshots val acc: {acc[0]:.4f}")
+                if test_acc[0] > best_acc:
+                    logger.info(f"Best acc so far, saving model...")
+                    best_val_acc[curr_val_n_shots] = test_acc[0]
+                    util.save_routine(
+                        epoch, model, optimizer, f"{opt.model_path}/{opt.model_name}_xvalnshots{curr_val_n_shots}_best"
+                    )
+
+    for curr_val_n_shots, best_acc in best_val_acc.items():
+        logger.info(f"Best acc for {curr_val_n_shots}-shots xval: {best_acc}")
+        logger.info(f"Saved model: {opt.model_name}_xvalnshots{curr_val_n_shots}_best")
+
+    # Output final information
+    logger.info(f"Host: {socket.gethostname()}")
+    logger.info(f"Git-hash: {get_git_revision_hash()}")
+
+
 def init_worker_fn(worker_id):
     worker_seed = torch.initial_seed() % 2**32
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
 
-def get_dataloaders(datasets, batch_size, n_workers, shuffle=True, drop_last=False):
+def get_dataloaders(datasets, batch_sizes, n_workers, shuffle=True, drop_last=False):
+    if isinstance(batch_sizes, int):
+        batch_sizes = [batch_sizes] * len(datasets)
     dataloaders = []
-    for ds in datasets:
+    for batch_size, ds in zip(batch_sizes, datasets):
         dataloaders.append(
             DataLoader(
                 ds,
