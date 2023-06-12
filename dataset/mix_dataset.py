@@ -107,15 +107,17 @@ class MixDataset(BaseDataset):
 
 
 class MetaMixDataset(Dataset):
-    def __init__(self, datasets):
+    def __init__(self, datasets, batch_size_factors=1):
         super(Dataset, self).__init__()
         self.datasets = datasets
         task_count = [0]
-
         task_to_db = []
 
-        for i, dataset in enumerate(datasets):
-            db_size = len(dataset)
+        if isinstance(batch_size_factors, int):
+            batch_size_factors = [batch_size_factors] * len(datasets)
+
+        for i, (dataset, size_factor) in enumerate(zip(datasets, batch_size_factors)):
+            db_size = len(dataset) * size_factor
             task_to_db.extend([i] * db_size)
             task_count.append(db_size)
 
@@ -128,6 +130,72 @@ class MetaMixDataset(Dataset):
         db_task_id = self.id_offset[db_id]
 
         return self.datasets[db_id][item - db_task_id]
+
+    def __len__(self):
+        return self._len
+
+
+class MDLMixDataset(BaseDataset):
+    def __init__(self, datasets, batch_size_factors):
+        super(Dataset, self).__init__()
+        self.datasets = datasets
+        self.batch_size_factors = batch_size_factors
+        self._setup()
+
+    def _setup(self):
+        self.item_to_db = []
+        # First we setup the item to db mapping
+        for i, (dataset, size_factor) in enumerate(zip(self.datasets, self.batch_size_factors)):
+            db_full_size = len(dataset) * size_factor
+            self.item_to_db.extend([i] * db_full_size)
+        self.item_to_db = np.array(self.item_to_db)
+
+        # Then we form the item to proper data index mapping
+        idx_count = [0]
+        for dataset in self.datasets:
+            idx_count.append(len(dataset))
+        self.db_to_idx_offset = np.cumsum(idx_count)[:-1]
+
+        self.item_to_idx = []
+        for i, (dataset, size_factor) in enumerate(zip(self.datasets, self.batch_size_factors)):
+            # Now we have a staircase modulo the dataset size
+            local_idx = (np.arange(len(dataset)) + self.db_to_idx_offset[i]).tolist() * size_factor
+            self.item_to_idx.extend(local_idx)
+        self.item_to_idx = np.array(self.item_to_idx)
+
+        # Finally, db to mask
+        db_to_logit_mask = []
+        for i, dataset in self.datasets:
+            db_to_logit_mask.extend([i] * (np.max(dataset.labels) + 1))
+        db_to_logit_mask = np.array(db_to_logit_mask)
+        _new_array = []
+        for i in range(db_to_logit_mask.shape[0]):
+            _new_array.extend(db_to_logit_mask == i)
+        self.db_to_logit_mask = np.array(_new_array)
+
+        self._len = len(self.item_to_db)
+
+    def _load_from_file(self, partition):
+        label_offset = 0
+        tmp_data = []
+        tmp_labels = []
+
+        for dataset in self.datasets:
+            data, labels = dataset.data, dataset.labels
+            tmp_data.append(data)
+            tmp_labels.append(labels + label_offset)
+            # Assumes that the labels are contiguous and starts at 0 for each dataset
+            label_offset += np.max(labels) + 1
+
+        return np.concatenate(tmp_data), np.concatenate(tmp_labels)
+
+    def __getitem__(self, item):
+        # NOTE: No rotate augmentation
+        db_id = self.item_to_db[item]
+        idx = self.item_to_idx[item]
+        image = self.transform(self.data[idx])
+        target = self.labels[idx]
+        return image, target, db_id
 
     def __len__(self):
         return self._len

@@ -97,7 +97,7 @@ def sup_baseline_main(opt):
         optimizer,
         scheduler,
         logger,
-        lambda x: True,
+        lambda x: x >= opt.lr_decay_epochs[0],
     )
 
 
