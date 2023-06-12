@@ -81,28 +81,21 @@ class MDLClassifier(torch.nn.Module):
     def __init__(self, backbone, feat_dim, dataloader_info_object, aux_info_object):
         super().__init__()
         self.backbone = backbone
-        self.dataloader_info_object = dataloader_info_object
-        self.aux_info_object = aux_info_object
-        self.summed_n_cls = 0
-        for name in self.dataloader_info_object.keys():
-            if name == "mask_fn":
-                continue
-            self.summed_n_cls += self.dataloader_info_object[name]["n_cls"]
         self.layer = nn.Linear(feat_dim, self.summed_n_cls)
 
-    def forward(self, name, train_loader):
+    def forward(self, xs, ys, db_idx, mask_mat):
         # First get input and output
-        batch_data = extract_batch_data_to_cuda(train_loader.sample())
-        xs, ys = batch_data[0], batch_data[1]
         feats = self.backbone(xs)
         logits = self.layer(feats)
-        # Now get the correct logits and ys
-        logits = logits[:, self.aux_info_object["mask_fn"](name)]
-        assert logits.shape[0] == ys.shape[0]
+        # Fix the logits to be masked
+        num_db = mask_mat.shape[0]
+        ohe_db_idx = torch.nn.functional.one_hot(db_idx, num_db)
+        non_inf_mask = ohe_db_idx @ mask_mat
+        correct_logits = torch.where(non_inf_mask, logits, -torch.inf)
         # NOTE: This automatically scales imagenet to have larger weight since
         # we scale each dataset by a scale factor * batch_size, so the actual weighting is
         # scale_factor * \sum_i l_i / true_batch_size
-        loss = F.cross_entropy(logits, ys, reduction="sum") / self.aux_info_object["opt"].batch_size
+        loss = F.cross_entropy(correct_logits, ys)
         return loss
 
 def extract_batch_data_to_cuda(batch_data):
