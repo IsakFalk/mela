@@ -10,11 +10,11 @@ valdatasets=(
     mscoco
 )
 
-grep "Loss" out.log
+grep "Loss" $1
 
 for dataset in "${valdatasets[@]}"; do
     echo "Performance of $dataset"
-    grep "$dataset 20nshots" out.log
+    grep "$dataset 5nshots" $1
 done
 
-grep "^20nshots" out.log
+grep "^5nshots" $1

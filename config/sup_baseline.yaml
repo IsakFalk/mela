@@ -10,11 +10,12 @@ defaults:
 
 # Extra logging information
 logger_name: "sup_proto"
-trial: "5"
+trial: "new"
 
 ### Dataset
 dataset: "metadataset"
-# All dataset: (train+val+test) aircraft, cub, dtd, fungi, imagenet, omniglot, quickdraw, vgg (val+test) mscoco, (test) traffic_sign
+# All dataset: (train+val+test) aircraft, cub, dtd, fungi, imagenet, omniglot, quickdraw, vgg (val+test) mscoco,
+# (test) traffic_sign
 #datasets: "aircraft,cub,dtd,fungi,imagenet,omniglot,quickdraw,vgg,mscoco,traffic_sign"
 # N-way, K-shot setting
 n_ways: 5
@@ -34,7 +35,8 @@ batch_size: 32 #64
 test_db_size: 1000
 num_workers: 4
 epoch_size: 5000
-epochs: 14
+epochs: 20
+
 # For validation accuracy
 val_n_ways: 5
 val_n_shots: 5
@@ -46,7 +48,7 @@ rotate_aug: false
 # Optimization
 SGD: true
 learning_rate: 0.05
-lr_decay_epochs: "8,12"
+lr_decay_epochs: "11,16"
 #  "35,42"
 lr_decay_rate: 0.1
 weight_decay: 5e-4
