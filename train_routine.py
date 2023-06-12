@@ -83,15 +83,12 @@ class MDLClassifier(torch.nn.Module):
         self.backbone = backbone
         self.layer = nn.Linear(feat_dim, self.summed_n_cls)
 
-    def forward(self, xs, ys, db_idx, mask_mat):
+    def forward(self, xs, ys, mask):
         # First get input and output
         feats = self.backbone(xs)
         logits = self.layer(feats)
         # Fix the logits to be masked
-        num_db = mask_mat.shape[0]
-        ohe_db_idx = torch.nn.functional.one_hot(db_idx, num_db)
-        non_inf_mask = ohe_db_idx @ mask_mat
-        correct_logits = torch.where(non_inf_mask, logits, -torch.inf)
+        correct_logits = torch.where(mask, logits, -torch.inf)
         # NOTE: This automatically scales imagenet to have larger weight since
         # we scale each dataset by a scale factor * batch_size, so the actual weighting is
         # scale_factor * \sum_i l_i / true_batch_size
@@ -150,15 +147,13 @@ def train(model, train_loader, optimizer, logger, opt=None, progress=False):
     return avg_metric.avg
 
 
-def train_mdl(model, train_loaders, optimizer, logger, opt=None, progress=False):
+def train_mdl(model, train_loader, optimizer, logger, opt=None, progress=False):
     avg_metric = util.AverageMeter()
     for i in tqdm(range(opt.epoch_size)):
         optimizer.zero_grad()
-        loss = 0.0
-        for name, train_loader in train_loaders.items():
-            loss += model.forward(name, train_loader)
-        #loss /= len(train_loaders)
-        loss /= sum(util.BATCH_SIZ_FACTOR.values())
+        batch = util.to_cuda_list(train_loader.sample())
+        xs, ys, mask = batch
+        loss = model(xs, ys, mask)
         loss.backward()
         optimizer.step()
         avg_metric.update([loss.item()])
@@ -233,7 +228,7 @@ def full_train(
 def full_train_mdl(
     opt,
     model,
-    train_loaders,
+    train_loader,
     test_loaders,
     optimizer,
     lr_sch,
@@ -243,7 +238,7 @@ def full_train_mdl(
 ):
     best_val_acc = {key: 0 for key in opt.val_n_shots}
     for epoch in range(opt.epochs):
-        train_loss = train_mdl(model, train_loaders, optimizer, logger, opt=opt, progress=opt.progress)
+        train_loss = train_mdl(model, train_loader, optimizer, logger, opt=opt, progress=opt.progress)
         if lr_sch:
             lr_sch.step()
 
