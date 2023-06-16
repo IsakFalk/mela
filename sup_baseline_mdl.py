@@ -111,7 +111,7 @@ def sup_baseline_main(opt):
     trainloader = MetaLoader(opt)
 
     # Val datasets stay the same
-    val_datasets, _ = get_datasets(opt, "val", False)
+    val_datasets, _ = get_datasets(opt, "test", False)
     valloaders = get_dataloaders(val_datasets, 256, opt.num_workers, shuffle=False)
 
     backbone = create_model(opt.model, dataset=opt.dataset)

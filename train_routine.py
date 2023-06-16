@@ -200,9 +200,6 @@ def full_train(
         logger.info(info)
 
         if eval_cond(epoch):
-            util.save_routine(
-                epoch, model, optimizer, f"{opt.model_path}/{opt.model_name}_xvalnshots{curr_val_n_shots}_epoch{epoch}"
-            )
             for curr_val_n_shots, best_acc in best_val_acc.items():
                 test_acc, test_per_dataset_acc, _  = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)
                 logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc[0]:.4f}")
@@ -247,6 +244,11 @@ def full_train_mdl(
         logger.info(info)
 
         if eval_cond(epoch):
+            logger.info(f"evaluating at epoch {epoch}")
+            logger.info(f"Saving model at epoch {epoch}")
+            util.save_routine(
+                epoch, model, optimizer, f"{opt.model_path}/{opt.model_name}_epoch{epoch}"
+            )
             for curr_val_n_shots, best_acc in best_val_acc.items():
                 test_acc, test_per_dataset_acc, _  = test_fn(model, test_loaders, curr_val_n_shots, logger, opt=opt)
                 logger.info(f"{curr_val_n_shots}nshots val acc: {test_acc[0]:.4f}")
