@@ -133,3 +133,4 @@ saves/
 /crit_labeler.py
 /check_model.py
 /load_s2m2.py
+get_log_info.sh
