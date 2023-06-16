@@ -17,4 +17,4 @@ for dataset in "${valdatasets[@]}"; do
     grep "$dataset 5nshots" $1
 done
 
-grep "^5nshots" $1
+grep "]5nshots" $1
