@@ -141,6 +141,72 @@ def get_labeler(backbone, train_loader, logger, opt):
         )
     return model
 
+def get_labeler_mdl(backbone, cluster_train_loader, logger, opt):
+    """Set up and output the correct labeler using arguments"""
+    model = MetaLabeler(backbone, opt, opt.feat_dim).cuda()
+
+    # Load backbone (meta representation) if already trained
+    save_dict = torch.load(os.path.join(opt.model_path, opt.pretrained_labeler))["model"]
+    util.partial_reload(model, save_dict)
+
+    model.eval()
+    # Load centroids if MetaLabeler also already trained
+    # else train labeler
+    if opt.pretrained_centroids:
+        model.load_cluster(f"{opt.model_path}/{opt.pretrained_centroids}")
+        logger.info(f"Loaded pretrained centroids successfully, number of clusters: {model.K}")
+    else:
+        # First just try to do this with ilsvrc
+        logger.info("Training labeler")
+        # init centroids
+        for id, batch_data in enumerate(cluster_train_loader.get_loader("imagenet")):
+            if id >= model.K / model.n_ways:
+                break
+            task_data = list(map(lambda x: x[0], batch_data))
+            xs, _, real_cls, _ = task_data
+            # Initialize K centroids using the tasks
+            model.init_centroid(*util.to_cuda_list([xs, real_cls]))
+
+        # Train
+        def stop_criteria(prev_k, curr_k):
+            return prev_k == curr_k
+
+        prev_k = 0
+        while not stop_criteria(prev_k, model.K):
+            batch_data = cluster_train_loader.sample_batch()
+            prev_k = model.K
+            clustered = 0
+            count = 0
+            while batch_data is not None:
+                task_data = list(map(lambda x: x[0], batch_data))
+                xs, _, real_cls, _ = task_data
+                success = model.cluster_task(*util.to_cuda_list([xs, real_cls]))
+                count += 1
+                clustered += int(success)
+                batch_data = cluster_train_loader.sample_batch()
+            logger.info(f"Clustering rate: {clustered / count}")
+            model.remove_cluster(opt.n_ways, opt.std_factor)
+            logger.info(f"No. of clusters: {model.K}")
+
+        # prev_k = 0
+        # while model.K != prev_k:
+        #     prev_k = model.K
+        #     clustered = 0
+        #     for id, batch_data in enumerate(tqdm(train_loader)):
+        #         task_data = list(map(lambda x: x[0], batch_data))
+        #         xs, _, real_cls, _ = task_data
+        #         success = model.cluster_task(*util.to_cuda_list([xs, real_cls]))
+        #         clustered += int(success)
+        #     logger.info(f"Clustering rate: {clustered / len(train_loader.dataset)}")
+        #     model.remove_cluster(opt.n_ways, opt.std_factor)
+        #     logger.info(f"No. of clusters: {model.K}")
+
+        torch.save(
+            model.centroid,
+            f"{opt.model_path}/{opt.old_model_name}_centroids_c{model.K}_q{opt.std_factor}",
+        )
+    return model
+
 
 def get_labeler_accuracy(dataloader, labeler, logger):
     """Get accuracy of labeler"""
