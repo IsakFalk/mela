@@ -93,10 +93,10 @@ class MetaLoader:
             ys.append(self._local_to_global_label(y, db_idx))
             db_idx.append([db_idx] * len(x))
 
-        xs = np.concatenate(xs, axis=0)
-        ys = np.concatenate(ys, axis=0)
+        xs = torch.tensor(np.concatenate(xs, axis=0))
+        ys = torch.tensor(np.concatenate(ys, axis=0))
         db_idx = np.concatenate(db_idx, axis=0)
-        mask = self._get_mask(db_idx)
+        mask = torch.tensor(self._get_mask(db_idx))
         return xs, ys, mask
 
 
