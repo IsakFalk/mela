@@ -4,9 +4,9 @@ from omegaconf import open_dict
 from torch import optim as optim
 
 import util
-from dataset.base_dataset import LabelerDataset
+from dataset.base_dataset import LabelerDataset, MetaDataset
 from dataset.mix_dataset import MixDataset
-from dataset.data_util import get_datasets_mdl, get_meta_dataset, get_transform
+from dataset.data_util import get_datasets_mdl, get_datasets, get_transform
 from models.util import create_model
 from routines import get_labeler_mdl, get_labeler_accuracy, label_dataset, parse_option
 from train_routine import Classifier, full_train, get_dataloaders
@@ -38,7 +38,7 @@ class ClusterLoader:
             MetaDataset(
                 ds, opt, no_replacement=True, db_size=None, fixed_db=None, sample_shape="flat"
             )
-            for ds in datasets
+            for ds in train_datasets
         ]
         self.meta_trainloaders = get_dataloaders(self.meta_datasets, 1, opt.num_workers)
 
@@ -90,8 +90,7 @@ def learn_labeler_and_model(opt):
     logger.info(sup_transform)
 
     labeler_datasets = []
-    for loader in trainloaders:
-        # TODO: Print dataset name
+    for name, loader in zip(cluster_loader.meta_trainloaders, cluster_loader.dataset_names):
         labeler_data = LabelerDataset(
             loader,
             labeler,
@@ -99,6 +98,7 @@ def learn_labeler_and_model(opt):
             transform=sup_transform,
             rotate_aug=labeler_opt.sup_rotate_aug,
         )
+        logger.info(f"Dataset: {name}")
         logger.info(f"Shape of LabelerDataset: {labeler_data.labels.shape}")
         logger.info(f"Number of datapoints: {labeler_data._len}")
         logger.info(f"Number of classes: {labeler_data.n_cls}")
@@ -110,7 +110,7 @@ def learn_labeler_and_model(opt):
     valloaders = get_dataloaders(val_datasets, 256, opt.num_workers, shuffle=False)
 
     backbone = create_model(opt.train_model, dataset=opt.dataset)
-    n_cls = sum([dl.dataset.n_cls for dl in labeler_loaders]
+    n_cls = sum([dl.dataset.n_cls for dl in labeler_loaders])
     # if opt.sup_rotate_aug:
     #     n_cls *= 4
 

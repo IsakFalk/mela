@@ -188,19 +188,6 @@ def get_labeler_mdl(backbone, cluster_train_loader, logger, opt):
             model.remove_cluster(opt.n_ways, opt.std_factor)
             logger.info(f"No. of clusters: {model.K}")
 
-        # prev_k = 0
-        # while model.K != prev_k:
-        #     prev_k = model.K
-        #     clustered = 0
-        #     for id, batch_data in enumerate(tqdm(train_loader)):
-        #         task_data = list(map(lambda x: x[0], batch_data))
-        #         xs, _, real_cls, _ = task_data
-        #         success = model.cluster_task(*util.to_cuda_list([xs, real_cls]))
-        #         clustered += int(success)
-        #     logger.info(f"Clustering rate: {clustered / len(train_loader.dataset)}")
-        #     model.remove_cluster(opt.n_ways, opt.std_factor)
-        #     logger.info(f"No. of clusters: {model.K}")
-
         torch.save(
             model.centroid,
             f"{opt.model_path}/{opt.old_model_name}_centroids_c{model.K}_q{opt.std_factor}",
