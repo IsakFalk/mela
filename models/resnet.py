@@ -312,6 +312,12 @@ def resnet24(keep_prob=1.0, avg_pool=False, **kwargs):
     model = ResNet(BasicBlock, [2, 2, 2, 2], keep_prob=keep_prob, avg_pool=avg_pool, **kwargs)
     return model
 
+def resnet34(keep_prob=1.0, avg_pool=False, **kwargs):
+    """Constructs a ResNet-34 model.
+    indeed, only (2 + 2 + 4 + 3) * 3 + 1 = 34 layers
+    """
+    model = ResNet(BasicBlock, [2, 2, 4, 3], keep_prob=keep_prob, avg_pool=avg_pool, **kwargs)
+    return model
 
 def resnet50(keep_prob=1.0, avg_pool=False, **kwargs):
     """Constructs a ResNet-50 model.
