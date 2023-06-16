@@ -31,11 +31,11 @@ lam: 0.001
 pretrained_model: false
 
 ## Training
-batch_size: 32 #64
+batch_size: 128
 test_db_size: 1000
 num_workers: 4
-epoch_size: 5000
-epochs: 20
+epoch_size: 10000 # With this we go through approximately 0.5 * imagenet once per epoch
+epochs: 40
 
 # For validation accuracy
 val_n_ways: 5
@@ -48,7 +48,7 @@ rotate_aug: false
 # Optimization
 SGD: true
 learning_rate: 0.05
-lr_decay_epochs: "11,16"
+lr_decay_epochs: "24,33"  #"18,25"
 #  "35,42"
 lr_decay_rate: 0.1
 weight_decay: 5e-4

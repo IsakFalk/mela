@@ -78,10 +78,10 @@ class MDLClassifier(torch.nn.Module):
     time the backbone is extracted and we use a different strategy
     given by the base_algorithm defined in this class."""
 
-    def __init__(self, backbone, feat_dim, dataloader_info_object, aux_info_object):
+    def __init__(self, backbone, feat_dim, n_cls):
         super().__init__()
         self.backbone = backbone
-        self.layer = nn.Linear(feat_dim, self.summed_n_cls)
+        self.layer = nn.Linear(feat_dim, n_cls)
 
     def forward(self, xs, ys, mask):
         # First get input and output
@@ -146,13 +146,14 @@ def train(model, train_loader, optimizer, logger, opt=None, progress=False):
 
     return avg_metric.avg
 
+import time
 
 def train_mdl(model, train_loader, optimizer, logger, opt=None, progress=False):
     avg_metric = util.AverageMeter()
     for i in tqdm(range(opt.epoch_size)):
         optimizer.zero_grad()
-        batch = util.to_cuda_list(train_loader.sample())
-        xs, ys, mask = batch
+        batch = train_loader.sample()
+        xs, ys, mask = util.to_cuda_list(batch)
         loss = model(xs, ys, mask)
         loss.backward()
         optimizer.step()
