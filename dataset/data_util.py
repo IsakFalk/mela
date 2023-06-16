@@ -11,13 +11,6 @@ from dataset.mix_dataset import default_transform as mix_default_transform
 
 def get_transform(opt, name, partition):
     """Get the correct transform of the dataset"""
-    # if "imagenet" in name.lower():
-    #     data_module = imagenet
-    # elif "aircraft" in name.lower() or "cub" in name.lower() or "flower" in name.lower():
-    #     data_module = mix_dataset
-    # else:
-    #     raise NotImplementedError(name)
-
     data_module = mix_dataset
 
     if opt.data_aug and partition.lower() == "train":
