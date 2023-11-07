@@ -195,11 +195,15 @@ Train a supervised baseline that have access to the true labels.
 
 * Cite us
 #+begin_src text
-@article{wang2022robust,
-  title={Robust Meta-Representation Learning via Global Label Inference and Classification},
-  author={Wang, Ruohan and Falk, Isak and Pontil, Massimiliano and Ciliberto, Carlo},
-  journal={arXiv preprint arXiv:2212.11702},
-  year={2022}
+@article{wang_2023,
+	doi = {10.1109/tpami.2023.3328184},
+	url = {https://doi.org/10.1109%2Ftpami.2023.3328184},
+	year = 2023,
+	publisher = {Institute of Electrical and Electronics Engineers ({IEEE})},
+	pages = {1--16},
+	author = {Ruohan Wang and John Isak Texas Falk and Massimiliano Pontil and Carlo Ciliberto},
+	title = {Robust Meta-Representation Learning via Global Label Inference and Classification},
+	journal = {{IEEE} Transactions on Pattern Analysis and Machine Intelligence}
 }
 #+end_src
 
